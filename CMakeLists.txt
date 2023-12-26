@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1.0)
 project(nbteditor VERSION 1.3)
 set (NBTEDITOR_VERSION 1.3)
 
-find_package(Qt5Widgets)
+find_package(Qt6Widgets)
 
 find_package( ZLIB REQUIRED )
 if (ZLIB_FOUND)
@@ -30,11 +30,11 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/window")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/resources")
 include_directories( ${CMAKE_BINARY_DIR} )
 
-## set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")
+## set_target_properties(Qt6::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")
 
 # Tell CMake to create the nbteditor executable
 add_executable(nbteditor ${MOC_HEADERS} ${nbteditor_src} ${nbteditor_res})
 # For Windows release build: add_executable(nbteditor WIN32 ${MOC_HEADERS} ${nbteditor_src} ${nbteditor_res})
 
 # Use the Widgets module from Qt 5.
-target_link_libraries(nbteditor Qt5::Widgets ${ZLIB_LIBRARIES})
+target_link_libraries(nbteditor Qt6::Widgets ${ZLIB_LIBRARIES})

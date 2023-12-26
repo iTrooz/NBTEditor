@@ -27,7 +27,6 @@
 #include "NBT/NBTReader.h"
 
 #include "UI/NBTTreeModel.h"
-#include <QDirModel>
 #include <QTranslator>
 
 using namespace std;

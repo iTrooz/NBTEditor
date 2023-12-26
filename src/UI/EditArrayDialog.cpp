@@ -33,7 +33,7 @@ namespace UI {
 
 	NBT::NBTArray<jbyte>* EditArrayDialog::getResultByteArray() {
 		QString str = widget.plainTextEdit->toPlainText();
-		QStringList list = str.split(" ", QString::SkipEmptyParts);
+		QStringList list = str.split(" ", Qt::SkipEmptyParts);
 
 		NBT::NBTArray<jbyte>* nbtArray = new NBT::NBTArray<jbyte>();
 		nbtArray->length = list.length();
@@ -55,7 +55,7 @@ namespace UI {
 
 	NBT::NBTArray<jint>* EditArrayDialog::getResultIntArray() {
 		QString str = widget.plainTextEdit->toPlainText();
-		QStringList list = str.split(" ", QString::SkipEmptyParts);
+		QStringList list = str.split(" ", Qt::SkipEmptyParts);
 
 		NBT::NBTArray<jint>* nbtArray = new NBT::NBTArray<jint>();
 		nbtArray->length = list.length();

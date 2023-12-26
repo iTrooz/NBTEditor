@@ -455,7 +455,7 @@ namespace NBT {
 
 			NBTList* list = new NBTList(type);
 			for (jint i = 0; i < length; i++) {
-				QString name = QString(i);
+				QString name = QString::number(i);
 				NBTEntry* entry = new NBTEntry(name, type);
 				entry->value = tag->Read(buffer);
 
