@@ -1,0 +1,77 @@
+# Inspired from https://github.com/iTrooz/Qt6-HelloWorld/blob/main/.github/workflows/build.yml
+name: Build
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  macos:
+    runs-on: macos-12
+    name: MacOS
+    steps:
+    - name: 🧰 Checkout
+      uses: actions/checkout@v3
+
+    - name: install Qt 6
+      run: brew install qt@6
+    
+    - name: Build project
+      run: |
+        cmake -B build
+        cmake --build build -j 4
+
+    - name: Upload binary
+      uses: actions/upload-artifact@v3
+      with:
+        if-no-files-found: error
+        name: MacOS binary
+        path: |
+          build/NBTEDITOR
+
+  windows:
+    runs-on: windows-2022
+    name: Windows
+    steps:
+    - name: 🧰 Checkout
+      uses: actions/checkout@v3
+
+    - name: install Qt 6
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: "6.*"
+    
+    - name: Build project
+      run: |
+        cmake -B build
+        cmake --build build -j 4
+
+    - name: Upload binary
+      uses: actions/upload-artifact@v3
+      with:
+        if-no-files-found: error
+        name: Windows binary
+        path: |
+          build/Debug/NBTEDITOR.exe
+
+  linux:
+    runs-on: ubuntu-22.04
+    name: Linux
+    steps:
+    - name: 🧰 Checkout
+      uses: actions/checkout@v3
+
+    - name: Build project using docker
+      run: |
+        docker buildx build . -f dist/linux.Dockerfile --progress=plain --output out
+
+    - name: Upload binary
+      uses: actions/upload-artifact@v3
+      with:
+        if-no-files-found: error
+        name: Linux binary
+        path: |
+          out/nbteditor
