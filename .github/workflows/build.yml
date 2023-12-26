@@ -35,18 +35,25 @@ jobs:
   windows:
     runs-on: windows-2022
     name: Windows
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
     - name: 🧰 Checkout
       uses: actions/checkout@v3
-
-    - name: install Qt 6
-      uses: jurplel/install-qt-action@v3
+  
+    - name: Install dependencies
+      uses: msys2/setup-msys2@v2
       with:
-        version: "6.*"
-    
+        install: zlib-devel
+        pacboy: >-
+          cmake:p
+          qt6:p
+          gcc:p
+
     - name: Build project
       run: |
-        cmake -B build
+        cmake -B build -G "Ninja"
         cmake --build build -j 4
 
     - name: Upload binary
@@ -55,7 +62,7 @@ jobs:
         if-no-files-found: error
         name: Windows binary
         path: |
-          build/Debug/NBTEDITOR.exe
+          build/nbteditor.exe
 
   linux:
     runs-on: ubuntu-22.04
