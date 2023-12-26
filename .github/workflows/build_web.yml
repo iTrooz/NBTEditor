@@ -1,0 +1,59 @@
+# Inspired from https://github.com/iTrooz/Qt6-HelloWorld/blob/main/.github/workflows/build_web.yml
+name: Build for the web
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+  actions: write
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+    name: 🌍 WebAssembly
+    steps:
+    - name: 🧰 Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: 🛠️ Build using docker
+      run: |
+        docker buildx build . -f dist/web/Dockerfile --progress=plain --output out
+
+    - name: 🔨 Change name of html page to index.html
+      run: |
+        mv out/*.html out/index.html
+
+    - name: 🔨 Fix permissions
+      run: |
+        chmod -c -R +rX "out/" | while read line; do
+          echo "::warning title=Invalid file permissions automatically fixed::$line"
+        done
+
+    - name: ⬆️ Upload artifacts to pages
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: out/
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    name: 📃 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+
+    if: ${{ github.ref == 'refs/heads/main' && github.event.repository.fork == false }}
+    needs: build
+
+    steps:
+      - name: 🌍 Deploy
+        id: deployment
+        uses: actions/deploy-pages@v2
