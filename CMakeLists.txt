@@ -33,8 +33,8 @@ include_directories( ${CMAKE_BINARY_DIR} )
 ## set_target_properties(Qt6::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")
 
 # Tell CMake to create the nbteditor executable
-add_executable(nbteditor ${MOC_HEADERS} ${nbteditor_src} ${nbteditor_res})
+qt_add_executable(nbteditor ${MOC_HEADERS} ${nbteditor_src} ${nbteditor_res})
 # For Windows release build: add_executable(nbteditor WIN32 ${MOC_HEADERS} ${nbteditor_src} ${nbteditor_res})
 
 # Use the Widgets module from Qt 5.
-target_link_libraries(nbteditor Qt6::Widgets ${ZLIB_LIBRARIES})
+target_link_libraries(nbteditor PUBLIC Qt6::Widgets ${ZLIB_LIBRARIES})

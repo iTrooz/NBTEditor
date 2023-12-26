@@ -403,7 +403,7 @@ namespace NBT {
 				array[i] = buffer->ReadLong();
 			}
 
-			return new NBTArray<jlong>(length, array);
+			return new NBTArray<jlong>(length, reinterpret_cast<long long*>(array)); // TODO check reinterpret_cast
 		}
 
 		void Write(WriteBuffer* buffer, NBTEntry& entry) const override {
