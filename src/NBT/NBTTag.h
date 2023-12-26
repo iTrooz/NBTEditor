@@ -398,12 +398,12 @@ namespace NBT {
 			jint length = buffer->ReadInt();
 			// TODO: Overflow check
 
-			long* array = new long[length];
+			jlong* array = new jlong[length];
 			for (jint i = 0; i < length; i++) {
 				array[i] = buffer->ReadLong();
 			}
 
-			return new NBTArray<jlong>(length, reinterpret_cast<long long*>(array)); // TODO check reinterpret_cast
+			return new NBTArray<jlong>(length, array); // TODO check reinterpret_cast
 		}
 
 		void Write(WriteBuffer* buffer, NBTEntry& entry) const override {
