@@ -53,15 +53,24 @@ namespace UI {
 		contextMenu = NULL;
 	}
 
-	void MainForm::loadFile(QString file) {
+	void MainForm::loadFile(QString path) {
+		QFile file(path);
+		file.open(QIODevice::ReadOnly);
+		QByteArray data = file.readAll();
+		loadFileContent(file.fileName(), data);
+		file.close();
+	}
+
+	void MainForm::loadFileContent(const QString &filename, const QByteArray &fileContent) {
 		NBT::NBTFileType oldFileType = currentFileType;
 		try {
 			NBT::NBTCompound* compound;
-			if (file.endsWith(".mca")) {
-				compound = NBT::NBTReader::LoadRegionFile(file.toStdString().c_str());
+			auto data = reinterpret_cast<Byte*>(const_cast<char*>(fileContent.data()));
+			if (filename.endsWith(".mca")) {
+				compound = NBT::NBTReader::LoadRegionData(data, fileContent.size());
 				currentFileType = NBT::NbtAnvilRegion;
 			} else {
-				compound = NBT::NBTReader::LoadFromFile(file.toStdString().c_str(), &currentFileType);
+				compound = NBT::NBTReader::LoadFromData(data, fileContent.size(), &currentFileType);
 			}
 
 			NBT::NBTEntry* rootEntry = new NBT::NBTEntry("", NBT::NbtCompound);
@@ -74,7 +83,7 @@ namespace UI {
 			widget.treeView->setModel(newModel);
 			widget.treeView->expandToDepth(0);
 
-			currentFile = file;
+			currentFile = filename;
 			if (oldModel != NULL)
 				delete oldModel;
 			disableSaving();
@@ -173,11 +182,9 @@ namespace UI {
 				return;
 		}
 
-		QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("NBT File (*.dat);;All Files (*)"));
-		if (fileName.isNull())
-			return;
-
-		loadFile(fileName);
+		QFileDialog::getOpenFileContent(tr("NBT File (*.dat);;All Files (*)"), [this](const QString &fileName, const QByteArray &fileContent){
+			this->loadFileContent(fileName, fileContent);
+		});
 	}
 
 	void MainForm::onActionSave() {

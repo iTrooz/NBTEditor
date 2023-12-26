@@ -16,6 +16,7 @@ namespace UI {
 		Ui::MainForm& GetWidget() { return widget; }
 
 		void loadFile(QString file);
+		void loadFileContent(const QString &filename, const QByteArray &fileContent);
 		void saveFile(QString file);
 
 		virtual void dragEnterEvent(QDragEnterEvent* event) override { event->acceptProposedAction(); }
