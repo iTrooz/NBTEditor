@@ -17,11 +17,11 @@ A nbt editor software to edit minecraft binary files. Currently it can be used t
 
 
 ## Used frameworks
-The software is written in C++ with the Qt5 framework and Zlib.
+The software is written in C++ with the Qt6 framework and Zlib.
 
 ## How to compile it on linux
 ```
-apt-get install build-essential qt5-default qttools5-dev-tools cmake zlib1g-dev
+apt-get install build-essential Qt6-default qttools5-dev-tools cmake zlib1g-dev
 mkdir build && cd build
 cmake ..
 make
@@ -29,7 +29,7 @@ make
 ```
 
 ## How to compile it on windows
-1. Install qt5 developer framework with mingw-32 compiler
+1. Install Qt6 developer framework with mingw-32 compiler
 2. Install cmake
 3. Compile static zlib library
 4. Follow linux introductions

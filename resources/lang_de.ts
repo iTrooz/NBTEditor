@@ -15,8 +15,8 @@
     </message>
     <message>
         <location filename="../src/UI/AboutDialog.ui" line="91"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright © 2018 Franz Reiter&lt;br/&gt;Used Frameworks: Qt5, Zlib&lt;/p&gt;&lt;p&gt;License: GNU General Public License 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright © 2018 Franz Reiter&lt;br/&gt;Benutzte Frameworks: Qt5, Zlib&lt;/p&gt;&lt;p&gt;Lizenz: GNU General Public License 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright © 2018 Franz Reiter&lt;br/&gt;Used Frameworks: Qt6, Zlib&lt;/p&gt;&lt;p&gt;License: GNU General Public License 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright © 2018 Franz Reiter&lt;br/&gt;Benutzte Frameworks: Qt6, Zlib&lt;/p&gt;&lt;p&gt;Lizenz: GNU General Public License 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/UI/AboutDialog.ui" line="101"/>
