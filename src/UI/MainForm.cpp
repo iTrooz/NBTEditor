@@ -9,11 +9,13 @@
 #include "NBT/NBTReader.h"
 #include "NBT/NBTHelper.h"
 #include "File/GzipByteReader.h"
+#include "File/MemoryByteWriter.h"
 #include "File/FileByteWriter.h"
 #include "File/GzipByteWriter.h"
 #include "File/WriteBuffer.h"
 #include "AboutDialog.h"
 #include <fstream>
+#include <filesystem>
 
 using namespace std;
 
@@ -101,7 +103,12 @@ namespace UI {
 			NBT::NBTEntry* rootEntry = model->GetRootEntry();
 			NBT::NBTCompound* compound = NBT::NBTHelper::GetCompound(*rootEntry);
 
+			#ifdef __EMSCRIPTEN__
+			File::MemoryByteWriter byteWriter;
+			#else
 			File::FileByteWriter byteWriter(file.toStdString());
+			#endif
+
 			File::WriteBuffer writer(&byteWriter);
 			switch (currentFileType) {
 				case NBT::NbtUncompressed:
@@ -114,6 +121,12 @@ namespace UI {
 					NBT::NBTReader::SaveRegionToWriter(byteWriter, compound);
 					break;
 			}
+
+			#ifdef __EMSCRIPTEN__
+			QByteArray qByteArray(reinterpret_cast<const char*>(byteWriter.GetBuffer()), byteWriter.GetBufferSize());
+			std::string filename = std::filesystem::path(file.toStdString()).filename();
+			QFileDialog::saveFileContent(qByteArray, QString::fromStdString(filename));
+			#endif
 
 			currentFile = file;
 			disableSaving();
@@ -195,7 +208,7 @@ namespace UI {
 		if (!saveEnabled || widget.treeView->model() == NULL)
 			return;
 
-		if (currentFile.isEmpty() || !QFileInfo(currentFile).isFile()) {
+		if (currentFile.isEmpty()) {
 			onActionSaveAs();
 			return;
 		}

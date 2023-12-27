@@ -18,6 +18,9 @@ namespace File {
 
 		void SetBufferByte(uint offset, const Byte byte);
 
+		const Byte* GetBuffer() { return buffer; }
+		const uint GetBufferSize() { return bufferOffset; }
+
 	protected:
 		void IncreaseBufferSize();
 		
