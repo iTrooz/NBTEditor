@@ -17,21 +17,6 @@
 using namespace std;
 
 namespace NBT {
-	NBTCompound* NBTReader::LoadFromFile(const char* filePath, NBTFileType* outType) {
-		ifstream ifs(filePath, ios::binary | ios::ate);
-		if (!ifs)
-			throw Exception::FileException(strerror(errno), filePath, errno);
-
-		uint length = ifs.tellg();
-		ifs.seekg(0, ios::beg);
-
-		Byte bytes[length];
-		ifs.read((char*)bytes, length);
-		ifs.close();
-
-		return LoadFromData(bytes, length, outType);
-	}
-
 	NBTCompound* NBTReader::LoadFromData(Byte* data, uint length, NBTFileType* outType) {
 		if (length > 1 && data[0] == NbtCompound) {
 			// Maybe the file is uncompressed - try to load it without gzip compression

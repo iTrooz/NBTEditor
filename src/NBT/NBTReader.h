@@ -3,7 +3,6 @@
 namespace NBT {
 	class NBTReader {
 	public:
-		static NBTCompound* LoadFromFile(const char* filePath, NBTFileType* outType = NULL);
 		static NBTCompound* LoadFromData(Byte* data, uint length, NBTFileType* outType = NULL);
 		static NBTCompound* LoadFromUncompressedStream(File::ByteBuffer* buffer);
 
