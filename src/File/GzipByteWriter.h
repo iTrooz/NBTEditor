@@ -19,7 +19,6 @@ namespace File {
 		void DoGzipCompression(int mode, int expectedResult);
 
 	private:
-		bool gzip;
 		z_stream stream;
 
 		Byte* buffer;

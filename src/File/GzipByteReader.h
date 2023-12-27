@@ -16,8 +16,6 @@ namespace File {
 		Byte* GetBuffer() { return buffer; }
 
 	private:
-		bool gzip;
-
 		z_stream stream;
 		bool finishedRead;
 

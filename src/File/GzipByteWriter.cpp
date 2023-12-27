@@ -7,7 +7,7 @@
 
 namespace File {
 
-	GzipByteWriter::GzipByteWriter(ByteWriter* parentWriter, bool gzip) : gzip(gzip), bufferLength(0), bufferOffset(0), parentWriter(parentWriter) {
+	GzipByteWriter::GzipByteWriter(ByteWriter* parentWriter, bool gzip) : bufferLength(0), bufferOffset(0), parentWriter(parentWriter) {
 		memset(&stream, 0, sizeof stream);
 		stream.zalloc = (alloc_func)0;
 		stream.zfree = (free_func)0;

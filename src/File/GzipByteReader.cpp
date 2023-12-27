@@ -7,7 +7,7 @@
 #include <algorithm>
 
 namespace File {
-	GzipByteReader::GzipByteReader(Byte* data, uint dataLength, bool gzip) : gzip(gzip), finishedRead(false), bufferLength(0), offset(0), bufferOffset(0) {
+	GzipByteReader::GzipByteReader(Byte* data, uint dataLength, bool gzip) : finishedRead(false), bufferLength(0), offset(0), bufferOffset(0) {
 		memset(&stream, 0, sizeof stream);
 		stream.zalloc = (alloc_func)0;
 		stream.zfree = (free_func)0;
