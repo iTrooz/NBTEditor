@@ -37,7 +37,7 @@ namespace NBT {
 
 			const NBTTag* tag = NBTHelper::GetTagByType(type);
 			if (tag == NULL)
-				throw Exception::NBTException("Unknown nbt element type: " + std::to_string(type), entry);
+				throw Exception::NBTException("Unknown nbt element type: " + std::to_string(type));
 			entry->value = tag->Read(buffer);
 
 			entries.push_back(entry);

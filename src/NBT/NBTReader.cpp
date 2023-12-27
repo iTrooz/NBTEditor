@@ -47,7 +47,7 @@ namespace NBT {
 	NBTCompound* NBTReader::LoadFromUncompressedStream(File::ByteBuffer* buffer) {
 		Byte rootType = buffer->ReadByte();
 		if (rootType != NbtCompound)
-			throw Exception::NBTException("Invalid root tag, must be a compound: " + std::to_string(rootType), NULL);
+			throw Exception::NBTException("Invalid root tag, must be a compound: " + std::to_string(rootType));
 		buffer->ReadString();
 
 		NBTCompound* rootCompound = new NBTCompound();
