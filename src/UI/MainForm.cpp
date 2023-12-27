@@ -97,7 +97,7 @@ namespace UI {
 		}
 	}
 
-	void MainForm::saveFile(QString file) {
+	void MainForm::saveFile(QString filePath) {
 		try {
 			NBTTreeModel* model = static_cast<NBTTreeModel*>(widget.treeView->model());
 			NBT::NBTEntry* rootEntry = model->GetRootEntry();
@@ -106,7 +106,7 @@ namespace UI {
 			#ifdef __EMSCRIPTEN__
 			File::MemoryByteWriter byteWriter;
 			#else
-			File::FileByteWriter byteWriter(file.toStdString());
+			File::FileByteWriter byteWriter(filePath.toStdString());
 			#endif
 
 			File::WriteBuffer writer(&byteWriter);
@@ -124,11 +124,11 @@ namespace UI {
 
 			#ifdef __EMSCRIPTEN__
 			QByteArray qByteArray(reinterpret_cast<const char*>(byteWriter.GetBuffer()), byteWriter.GetBufferSize());
-			std::string filename = std::filesystem::path(file.toStdString()).filename();
+			std::string filename = std::filesystem::path(filePath.toStdString()).filename();
 			QFileDialog::saveFileContent(qByteArray, QString::fromStdString(filename));
 			#endif
 
-			currentFile = file;
+			currentFile = filePath;
 			disableSaving();
 		} catch (const Exception::Exception& ex) {
 			QMessageBox::critical(this, tr("Can't save file"), tr("The NBT data could not be saved:\n%1").arg(QString(ex.what())), QMessageBox::Ok, QMessageBox::Ok);
@@ -222,11 +222,11 @@ namespace UI {
 		if (widget.treeView->model() == NULL)
 			return;
 
-		QString fileName = QFileDialog::getSaveFileName(this, tr("Save file"), "", tr("NBT File (*.dat);;All Files (*)"));
-		if (fileName.isNull())
+		QString filePath = QFileDialog::getSaveFileName(this, tr("Save file"), "", tr("NBT File (*.dat);;All Files (*)"));
+		if (filePath.isNull())
 			return;
 
-		saveFile(fileName);
+		saveFile(filePath);
 	}
 
 	void MainForm::onActionAbout() {
