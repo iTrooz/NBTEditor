@@ -19,6 +19,7 @@ ENV CCACHE_DIR /home/user/ccache
 RUN CC=emcc CXX=em++ vcpkg install --triplet=wasm32-emscripten zlib
 
 COPY . .
+ARG BUILD_TYPE=Debug
 RUN --mount=type=cache,target=/home/user/cache <<EOF
 # Build NBTEditor
 set -xe
@@ -29,6 +30,7 @@ cmake \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DQT_HOST_PATH=$(dirname "$QT_WASM")/gcc_64 \
+    -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
     -B build -G Ninja
 cmake --build build -j 4
 ccache -s

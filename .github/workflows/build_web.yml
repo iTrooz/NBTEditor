@@ -25,7 +25,7 @@ jobs:
 
     - name: 🛠️ Build using docker
       run: |
-        docker buildx build . -f dist/web/Dockerfile --progress=plain --output out
+        docker buildx build . -f dist/web/Dockerfile --progress=plain --output out --build-arg "BUILD_TYPE=Release"
 
     - name: 🔨 Change name of html page to index.html
       run: |
