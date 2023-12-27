@@ -32,7 +32,7 @@ cmake \
     -DQT_HOST_PATH=$(dirname "$QT_WASM")/gcc_64 \
     -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
     -B build -G Ninja
-cmake --build build -j 4
+cmake --build build
 ccache -s
 EOF
 
