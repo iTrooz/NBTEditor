@@ -204,6 +204,7 @@ namespace UI {
 	}
 
 	void MainForm::onActionSaveAs() {
+		std::cout << "On Action: Save As" << std::endl;
 		// TODO: Disable button instead of just block the action
 		if (widget.treeView->model() == NULL)
 			return;
