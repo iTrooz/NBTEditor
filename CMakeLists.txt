@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-project(nbteditor VERSION 1.3)
-set (NBTEDITOR_VERSION 1.3)
+project(nbteditor VERSION 1.4)
+set (NBTEDITOR_VERSION itr-1.4)
 
 find_package(Qt6Widgets)
 
