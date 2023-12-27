@@ -34,8 +34,6 @@ cmake --build build -j 4
 ccache -s
 EOF
 
-RUN ls /home/user/project/build
-
 
 FROM scratch
 COPY --from=0 [ \
