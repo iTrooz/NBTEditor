@@ -11,10 +11,7 @@ A nbt editor software to edit minecraft binary files. Currently it can be used t
 ![NBTEditor](Image.png)
 
 ## Download
-- Windows Portable: http://dl.howaner.de/NBTEditor/latest/NBTEditor.zip
-- Windows Installer: http://dl.howaner.de/NBTEditor/latest/NBTEditor.msi
-- Ubuntu 16.04 Deb: http://dl.howaner.de/NBTEditor/latest/nbteditor_amd64.deb
-
+See CI artifacts
 
 ## Used frameworks
 The software is written in C++ with the Qt6 framework and Zlib.
