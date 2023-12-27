@@ -7,7 +7,7 @@
 namespace UI {
 	class MainForm;
 	class NBTTreeModel;
-	class NBTTreeItem;
+	struct NBTTreeItem;
 
 	class TreeContextMenu : public QObject {
 		Q_OBJECT

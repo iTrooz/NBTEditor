@@ -6,7 +6,7 @@
 #include <QWidget>
 
 namespace NBT {
-	class NBTEntry;
+	struct NBTEntry;
 }
 
 namespace UI {

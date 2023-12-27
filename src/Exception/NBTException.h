@@ -2,7 +2,7 @@
 #include "Exception.h"
 
 namespace NBT {
-	class NBTEntry;
+	struct NBTEntry;
 }
 
 namespace Exception {
