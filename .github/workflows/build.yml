@@ -21,7 +21,7 @@ jobs:
     
     - name: Build project
       run: |
-        cmake -B build
+        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -B build
         cmake --build build -j 4
 
     - name: Upload binary
@@ -53,7 +53,7 @@ jobs:
 
     - name: Build project
       run: |
-        cmake -B build -G "Ninja"
+        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -B build -G "Ninja"
         cmake --build build -j 4
 
     - name: Upload binary
