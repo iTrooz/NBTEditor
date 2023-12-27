@@ -11,7 +11,7 @@ A nbt editor software to edit minecraft binary files. Currently it can be used t
 ![NBTEditor](Image.png)
 
 ## Download
-See CI artifacts
+See [Releases page](https://github.com/iTrooz/NBTEditor/releases) or CI artifacts
 
 ## Used frameworks
 The software is written in C++ with the Qt6 framework and Zlib.
