@@ -182,7 +182,7 @@ namespace UI {
 				return;
 		}
 
-		QFileDialog::getOpenFileContent(tr("NBT File (*.dat);;All Files (*)"), [this](const QString &fileName, const QByteArray &fileContent){
+		QFileDialog::getOpenFileContent(tr("NBT File (*.dat *.mca);;All Files (*)"), [this](const QString &fileName, const QByteArray &fileContent){
 			this->loadFileContent(fileName, fileContent);
 		});
 	}
