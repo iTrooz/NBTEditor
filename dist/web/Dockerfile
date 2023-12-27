@@ -9,16 +9,30 @@ USER user
 RUN git clone --depth 1 https://github.com/microsoft/vcpkg /home/user/vcpkg && /home/user/vcpkg/bootstrap-vcpkg.sh
 ENV PATH=$PATH:/home/user/vcpkg
 
+# Setup ccache
+USER root
+RUN apt install -y ccache
+USER user
+ENV CCACHE_DIR /home/user/ccache
+
 # Install zlib dep
 RUN CC=emcc CXX=em++ vcpkg install --triplet=wasm32-emscripten zlib
 
 COPY . .
-RUN cmake \
+RUN --mount=type=cache,target=/home/user/cache <<EOF
+# Build NBTEditor
+set -xe
+ccache -zs
+cmake \
     -DCMAKE_TOOLCHAIN_FILE=/home/user/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=$QT_WASM/lib/cmake/Qt6/qt.toolchain.cmake \
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DQT_HOST_PATH=$(dirname "$QT_WASM")/gcc_64 \
     -B build -G Ninja
-RUN cmake --build build -j 4
+cmake --build build -j 4
+ccache -s
+EOF
 
 RUN ls /home/user/project/build
 
