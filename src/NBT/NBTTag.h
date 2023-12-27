@@ -65,7 +65,7 @@ namespace NBT {
 
 		virtual void* Read(ByteBuffer* buffer) const override = 0;
 
-		virtual void Write(WriteBuffer* buffer, NBTEntry& entry) const = 0;
+		virtual void Write(WriteBuffer* buffer, NBTEntry& entry) const override = 0;
 
 		virtual void* CreateDefaultData() const override = 0;
 
