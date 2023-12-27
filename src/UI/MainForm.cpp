@@ -221,12 +221,16 @@ namespace UI {
 		// TODO: Disable button instead of just block the action
 		if (widget.treeView->model() == NULL)
 			return;
-
+		
+		#ifdef __EMSCRIPTEN__
+		saveFile("");
+		#else
 		QString filePath = QFileDialog::getSaveFileName(this, tr("Save file"), "", tr("NBT File (*.dat);;All Files (*)"));
 		if (filePath.isNull())
 			return;
 
 		saveFile(filePath);
+		#endif
 	}
 
 	void MainForm::onActionAbout() {
