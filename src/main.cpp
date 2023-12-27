@@ -39,8 +39,9 @@ int main(int argc, char *argv[]) {
 	QApplication app(argc, argv);
 
 	QTranslator qtTranslator;
-	qtTranslator.load(":/languages/lang_" + QLocale::system().name());
-	app.installTranslator(&qtTranslator);
+	if (qtTranslator.load(":/languages/lang_" + QLocale::system().name())) {
+		app.installTranslator(&qtTranslator);
+	}
 	
 	UI::MainForm form;
 	form.show();
