@@ -1,3 +1,11 @@
+
+# Fork notice
+
+This is a fork of https://github.com/Howaner/NBTEditor, with:
+- some fixes/improvements
+- Web version
+- CI that uploads binaries on every commit
+
 # NBTEditor
 A nbt editor software to edit minecraft binary files. Currently it can be used to edit .dat and .schematic files.  
 ![NBTEditor](Image.png)
