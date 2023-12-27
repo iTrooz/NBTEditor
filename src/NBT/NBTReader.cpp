@@ -56,9 +56,8 @@ namespace NBT {
 		return rootCompound;
 	}
 
-	void NBTReader::SaveToFile(const char* filePath, NBTCompound* compound) {
-		File::FileByteWriter* fileWriter = new File::FileByteWriter(std::string(filePath));
-		File::GzipByteWriter* gzipWriter = new File::GzipByteWriter(fileWriter);
+	void NBTReader::SaveToWriter(File::ByteWriter &byteWriter, NBTCompound* compound) {
+		File::GzipByteWriter* gzipWriter = new File::GzipByteWriter(&byteWriter);
 
 		try {
 			File::WriteBuffer buffer(gzipWriter);
@@ -69,29 +68,18 @@ namespace NBT {
 			gzipWriter->Finish();
 		} catch (const Exception::Exception& ex) {
 			delete gzipWriter;
-			delete fileWriter;
 			throw ex;
 		}
 
-		delete fileWriter;
 		delete gzipWriter;
 	}
 
-	void NBTReader::SaveToFileUncompressed(const char* filePath, NBTCompound* compound) {
-		File::FileByteWriter* fileWriter = new File::FileByteWriter(std::string(filePath));
+	void NBTReader::SaveToWriterUncompressed(File::ByteWriter &byteWriter, NBTCompound* compound) {
+		File::WriteBuffer writer(&byteWriter);
+		writer.WriteByte(NbtCompound);
+		writer.WriteString("");
 
-		try {
-			File::WriteBuffer buffer(fileWriter);
-			buffer.WriteByte(NbtCompound);
-			buffer.WriteString("");
-
-			compound->Write(&buffer);
-		} catch (const Exception::Exception& ex) {
-			delete fileWriter;
-			throw ex;
-		}
-
-		delete fileWriter;
+		compound->Write(&writer);
 	}
 
 	NBTCompound* NBTReader::LoadRegionFile(const char* filePath) {
@@ -168,98 +156,87 @@ namespace NBT {
 		return rootCompound;
 	}
 
-	void NBTReader::SaveRegionToFile(const char* filePath, NBTCompound* compound) {
-		File::FileByteWriter* fileWriter = NULL;
+	void NBTReader::SaveRegionToWriter(File::ByteWriter &byteWriter, NBTCompound* compound) {
+		File::WriteBuffer writer(&byteWriter);
 
 		Byte fillBytes[4096];
 		std::fill(fillBytes, fillBytes + 4096, 0);
 
-		try {
-			File::MemoryByteWriter dataWriter;
-			RegionChunkInformation chunks[1024];
+		File::MemoryByteWriter chunkDataWriter;
+		RegionChunkInformation chunks[1024];
 
-			for (int i = 0; i < 1024; i++) {
-				uint offset = dataWriter.GetOffset();
-				int relX = i % 32;
-				int relZ = (int) (i / 32.0);
+		for (int i = 0; i < 1024; i++) {
+			uint offset = chunkDataWriter.GetOffset();
+			int relX = i % 32;
+			int relZ = (int) (i / 32.0);
 
-				NBTEntry* chunkEntry = compound->FindName(QString::number(relX) + ", " + QString::number(relZ));
-				NBTCompound* chunkCompound = (chunkEntry == NULL ? NULL : NBTHelper::GetCompound(*chunkEntry));
-				if (chunkCompound == NULL || chunkCompound->GetEntries().empty()) {
-					chunks[i].lastChange = 0;
-					chunks[i].offset = 0;
-					chunks[i].roundedSize = 0;
-					continue;
-				}
-
-				// Needed for removing of the LastChange entry
-				NBTCompound chunkCompoundCopy(chunkCompound);
-
-				NBTEntry* lastChange = chunkCompound->FindName("LastChange");
-				if (lastChange != NULL) {
-					chunks[i].lastChange = NBTHelper::GetInt(*lastChange);
-					chunkCompoundCopy.RemoveEntry(lastChange);
-				} else {
-					chunks[i].lastChange = 0;
-				}
-
-				// Write placeholder for chunk size and compression format
-				dataWriter.WriteBytes(fillBytes, 4);
-				dataWriter.WriteByte(2);  // Zlib compression
-
-				// Write chunk nbt data
-				{
-					File::GzipByteWriter gzipWriter(&dataWriter, false);
-					File::WriteBuffer buffer(&gzipWriter);
-
-					buffer.WriteByte(NbtCompound);
-					buffer.WriteString("");
-					chunkCompoundCopy.Write(&buffer);
-					gzipWriter.Finish();
-				}
-
-				// Override pre-written placeholder with the correct chunk size
-				{
-					uint newOffset = dataWriter.GetOffset();
-					int chunkSize = (newOffset - offset) - 4;
-					int kilobyteSize = (newOffset - offset) / 4096 + 1;
-
-					dataWriter.SetBufferByte(offset, (chunkSize >> 24) & 0x0F);
-					dataWriter.SetBufferByte(offset + 1, (chunkSize >> 16) & 0xFF);
-					dataWriter.SetBufferByte(offset + 2, (chunkSize >> 8) & 0xFF);
-					dataWriter.SetBufferByte(offset + 3, chunkSize & 0xFF);
-
-					chunks[i].roundedSize = kilobyteSize;
-					chunks[i].offset = offset / 4096 + 2;
-
-					// Fill up to 4096 bytes
-					int rest = newOffset % 4096;
-					if (rest != 0)
-						dataWriter.WriteBytes(fillBytes, 4096 - rest);
-				}
+			NBTEntry* chunkEntry = compound->FindName(QString::number(relX) + ", " + QString::number(relZ));
+			NBTCompound* chunkCompound = (chunkEntry == NULL ? NULL : NBTHelper::GetCompound(*chunkEntry));
+			if (chunkCompound == NULL || chunkCompound->GetEntries().empty()) {
+				chunks[i].lastChange = 0;
+				chunks[i].offset = 0;
+				chunks[i].roundedSize = 0;
+				continue;
 			}
 
-			fileWriter = new File::FileByteWriter(std::string(filePath));
-			File::WriteBuffer buffer(fileWriter);
-			
-			for (int i = 0; i < 1024; i++) {
-				RegionChunkInformation chunkInfo = chunks[i];
-				buffer.WriteThreeBytesInt(chunkInfo.offset);
-				buffer.WriteByte(chunkInfo.roundedSize);
-			}
-			for (int i = 0; i < 1024; i++)
-				buffer.WriteInt(chunks[i].lastChange);
+			// Needed for removing of the LastChange entry
+			NBTCompound chunkCompoundCopy(chunkCompound);
 
-			// Add dataWriter data to file stream
-			NBT::NBTArray<Byte> chunkBytes = dataWriter.GetByteArray();
-			buffer.WriteBytes(chunkBytes.array, chunkBytes.length);
-		} catch (const Exception::Exception& ex) {
-			if (fileWriter != NULL)
-				delete fileWriter;
-			throw ex;
+			NBTEntry* lastChange = chunkCompound->FindName("LastChange");
+			if (lastChange != NULL) {
+				chunks[i].lastChange = NBTHelper::GetInt(*lastChange);
+				chunkCompoundCopy.RemoveEntry(lastChange);
+			} else {
+				chunks[i].lastChange = 0;
+			}
+
+			// Write placeholder for chunk size and compression format
+			chunkDataWriter.WriteBytes(fillBytes, 4);
+			chunkDataWriter.WriteByte(2);  // Zlib compression
+
+			// Write chunk nbt data
+			{
+				File::GzipByteWriter gzipWriter(&chunkDataWriter, false);
+				File::WriteBuffer buffer(&gzipWriter);
+
+				buffer.WriteByte(NbtCompound);
+				buffer.WriteString("");
+				chunkCompoundCopy.Write(&buffer);
+				gzipWriter.Finish();
+			}
+
+			// Override pre-written placeholder with the correct chunk size
+			{
+				uint newOffset = chunkDataWriter.GetOffset();
+				int chunkSize = (newOffset - offset) - 4;
+				int kilobyteSize = (newOffset - offset) / 4096 + 1;
+
+				chunkDataWriter.SetBufferByte(offset, (chunkSize >> 24) & 0x0F);
+				chunkDataWriter.SetBufferByte(offset + 1, (chunkSize >> 16) & 0xFF);
+				chunkDataWriter.SetBufferByte(offset + 2, (chunkSize >> 8) & 0xFF);
+				chunkDataWriter.SetBufferByte(offset + 3, chunkSize & 0xFF);
+
+				chunks[i].roundedSize = kilobyteSize;
+				chunks[i].offset = offset / 4096 + 2;
+
+				// Fill up to 4096 bytes
+				int rest = newOffset % 4096;
+				if (rest != 0)
+					chunkDataWriter.WriteBytes(fillBytes, 4096 - rest);
+			}
 		}
 
-		delete fileWriter;
+		for (int i = 0; i < 1024; i++) {
+			RegionChunkInformation chunkInfo = chunks[i];
+			writer.WriteThreeBytesInt(chunkInfo.offset);
+			writer.WriteByte(chunkInfo.roundedSize);
+		}
+		for (int i = 0; i < 1024; i++)
+			writer.WriteInt(chunks[i].lastChange);
+
+		// Add chunkDataWriter data to file stream
+		NBT::NBTArray<Byte> chunkBytes = chunkDataWriter.GetByteArray();
+		writer.WriteBytes(chunkBytes.array, chunkBytes.length);
 	}
 
 }

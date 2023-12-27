@@ -1,4 +1,5 @@
 #include "NBTCompound.h"
+#include "File/ByteWriter.h"
 
 namespace NBT {
 	class NBTReader {
@@ -6,12 +7,12 @@ namespace NBT {
 		static NBTCompound* LoadFromData(Byte* data, uint length, NBTFileType* outType = NULL);
 		static NBTCompound* LoadFromUncompressedStream(File::ByteBuffer* buffer);
 
-		static void SaveToFile(const char* filePath, NBTCompound* compound);
-		static void SaveToFileUncompressed(const char* filePath, NBTCompound* compound);
+		static void SaveToWriter(File::ByteWriter &byteWriter, NBTCompound* compound);
+		static void SaveToWriterUncompressed(File::ByteWriter &byteWriter, NBTCompound* compound);
 
 		static NBTCompound* LoadRegionFile(const char* filePath);
 		static NBTCompound* LoadRegionData(Byte* data, uint length);
 
-		static void SaveRegionToFile(const char* filePath, NBTCompound* compound);
+		static void SaveRegionToWriter(File::ByteWriter &byteWriter, NBTCompound* compound);
 	};
 }

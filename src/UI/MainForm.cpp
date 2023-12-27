@@ -11,6 +11,7 @@
 #include "File/GzipByteReader.h"
 #include "File/FileByteWriter.h"
 #include "File/GzipByteWriter.h"
+#include "File/WriteBuffer.h"
 #include "AboutDialog.h"
 #include <fstream>
 
@@ -100,15 +101,17 @@ namespace UI {
 			NBT::NBTEntry* rootEntry = model->GetRootEntry();
 			NBT::NBTCompound* compound = NBT::NBTHelper::GetCompound(*rootEntry);
 
+			File::FileByteWriter byteWriter(file.toStdString());
+			File::WriteBuffer writer(&byteWriter);
 			switch (currentFileType) {
 				case NBT::NbtUncompressed:
-					NBT::NBTReader::SaveToFileUncompressed(file.toStdString().c_str(), compound);
+					NBT::NBTReader::SaveToWriterUncompressed(byteWriter, compound);
 					break;
 				case NBT::NbtGzipCompressed:
-					NBT::NBTReader::SaveToFile(file.toStdString().c_str(), compound);
+					NBT::NBTReader::SaveToWriter(byteWriter, compound);
 					break;
 				case NBT::NbtAnvilRegion:
-					NBT::NBTReader::SaveRegionToFile(file.toStdString().c_str(), compound);
+					NBT::NBTReader::SaveRegionToWriter(byteWriter, compound);
 					break;
 			}
 
