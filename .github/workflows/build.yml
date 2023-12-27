@@ -73,7 +73,7 @@ jobs:
 
     - name: Build project using docker
       run: |
-        docker buildx build . -f dist/linux.Dockerfile --progress=plain --output out
+        docker buildx build . -f dist/linux.Dockerfile --progress=plain --output out --build-arg "BUILD_TYPE=Release"
 
     - name: Upload binary
       uses: actions/upload-artifact@v3

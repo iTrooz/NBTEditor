@@ -9,7 +9,8 @@ RUN apt install zlib1g-dev
 
 COPY . .
 
-RUN cmake -B build
+ARG BUILD_TYPE=Debug
+RUN cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -B build
 RUN cmake --build build -j 4
 
 
