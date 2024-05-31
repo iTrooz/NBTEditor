@@ -16,6 +16,7 @@ namespace UI {
 
 		NBT::NBTArray<jbyte>* getResultByteArray();
 		NBT::NBTArray<jint>* getResultIntArray();
+		NBT::NBTArray<jlong>* getResultLongArray();
 
 	public slots:
 		void clickOk();

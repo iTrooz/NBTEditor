@@ -39,6 +39,7 @@ namespace NBT {
 
 	template const NBTTagByteArray* NBTHelper::GetTag<NBTTagByteArray>(NBTType type);
 	template const NBTTagIntArray* NBTHelper::GetTag<NBTTagIntArray>(NBTType type);
+	template const NBTTagLongArray* NBTHelper::GetTag<NBTTagLongArray>(NBTType type);
 
 	const NBTTag** NBTHelper::GetAllTags() {
 		return tagsByType;
@@ -76,6 +77,10 @@ namespace NBT {
 	}
 	NBTArray<jint>& NBTHelper::GetIntArray(NBTEntry& entry) {
 		return GetTag<NBTTagIntArray>(NbtIntArray)->GetData(entry);
+	}
+
+	NBTArray<jlong>& NBTHelper::GetLongArray(NBTEntry& entry) {
+		return GetTag<NBTTagLongArray>(NbtLongArray)->GetData(entry);
 	}
 
 	void NBTHelper::SetDouble(NBTEntry& entry, jdouble value) {

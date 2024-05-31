@@ -30,6 +30,7 @@ namespace UI {
 
 	template void EditArrayDialog::setArray<jbyte>(NBT::NBTArray<jbyte>&);
 	template void EditArrayDialog::setArray<jint>(NBT::NBTArray<jint>&);
+	template void EditArrayDialog::setArray<jlong>(NBT::NBTArray<jlong>&);
 
 	NBT::NBTArray<jbyte>* EditArrayDialog::getResultByteArray() {
 		QString str = widget.plainTextEdit->toPlainText();
@@ -64,6 +65,28 @@ namespace UI {
 		for (uint i = 0; i < nbtArray->length; i++) {
 			bool success = false;
 			int number = list[i].toInt(&success, 10);
+			if (!success) {
+				delete nbtArray;
+				return NULL;
+			}
+
+			nbtArray->array[i] = number;
+		}
+
+		return nbtArray;
+	}
+
+	NBT::NBTArray<jlong>* EditArrayDialog::getResultLongArray() {
+		QString str = widget.plainTextEdit->toPlainText();
+		QStringList list = str.split(" ", QString::SkipEmptyParts);
+
+		NBT::NBTArray<jlong>* nbtArray = new NBT::NBTArray<jlong>();
+		nbtArray->length = list.length();
+		nbtArray->array = new jlong[list.length()];
+
+		for (uint i = 0; i < nbtArray->length; i++) {
+			bool success = false;
+			jlong number = (sizeof(long) == 8) ? list[i].toLong(&success, 10) : list[i].toLongLong(&success, 10);
 			if (!success) {
 				delete nbtArray;
 				return NULL;

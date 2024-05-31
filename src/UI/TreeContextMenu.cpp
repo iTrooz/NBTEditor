@@ -34,7 +34,7 @@ namespace UI {
 			if (item->nbtEntry->type == NbtCompound || item->nbtEntry->type == NbtList)
 				addToCompoundAction->setVisible(true);
 
-			if (item->nbtEntry->type == NbtByteArray || item->nbtEntry->type == NbtIntArray)
+			if (item->nbtEntry->type == NbtByteArray || item->nbtEntry->type == NbtIntArray || item->nbtEntry->type == NbtLongArray)
 				editAction->setVisible(true);
 		}
 
@@ -57,7 +57,7 @@ namespace UI {
 		if (item->nbtEntry == NULL)
 			return;
 
-		if (item->nbtEntry->type == NbtByteArray || item->nbtEntry->type == NbtIntArray)
+		if (item->nbtEntry->type == NbtByteArray || item->nbtEntry->type == NbtIntArray || item->nbtEntry->type == NbtLongArray)
 			editArray(index, item);
 	}
 
@@ -129,7 +129,7 @@ namespace UI {
 		if (item->nbtEntry == NULL)
 			return;
 
-		if (item->nbtEntry->type == NbtByteArray || item->nbtEntry->type == NbtIntArray)
+		if (item->nbtEntry->type == NbtByteArray || item->nbtEntry->type == NbtIntArray || item->nbtEntry->type == NbtLongArray)
 			editArray(index, item);
 	}
 
@@ -215,6 +215,18 @@ namespace UI {
 				}
 
 				NBTHelper::GetTag<NBTTagIntArray>(NbtIntArray)->SetData(*item->nbtEntry, *newArray);
+				GetModel()->UpdateItem(index);
+			}
+		} else if (item->nbtEntry->type == NbtLongArray) {
+			dialog.setArray(NBTHelper::GetLongArray(*item->nbtEntry));
+			if (dialog.exec() == QDialog::Accepted) {
+				NBT::NBTArray<jlong>* newArray = dialog.getResultLongArray();
+				if (newArray == NULL) {
+					QMessageBox::critical(form, tr("Invalid data"), tr("The input data is invalid.", ""), QMessageBox::Ok, QMessageBox::Ok);
+					return;
+				}
+
+				NBTHelper::GetTag<NBTTagLongArray>(NbtLongArray)->SetData(*item->nbtEntry, *newArray);
 				GetModel()->UpdateItem(index);
 			}
 		}

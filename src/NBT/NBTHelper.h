@@ -20,6 +20,7 @@ namespace NBT {
 		static jdouble GetDouble(NBTEntry& entry);
 		static NBTArray<jbyte>& GetByteArray(NBTEntry& entry);
 		static NBTArray<jint>& GetIntArray(NBTEntry& entry);
+		static NBTArray<jlong>& GetLongArray(NBTEntry& entry);
 		static QString& GetString(NBTEntry& entry);
 		static NBTList& GetList(NBTEntry& entry);
 		static NBTCompound* GetCompound(NBTEntry& entry);
