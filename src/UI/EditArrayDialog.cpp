@@ -78,7 +78,7 @@ namespace UI {
 
 	NBT::NBTArray<jlong>* EditArrayDialog::getResultLongArray() {
 		QString str = widget.plainTextEdit->toPlainText();
-		QStringList list = str.split(" ", QString::SkipEmptyParts);
+		QStringList list = str.split(" ", Qt::SkipEmptyParts);
 
 		NBT::NBTArray<jlong>* nbtArray = new NBT::NBTArray<jlong>();
 		nbtArray->length = list.length();
